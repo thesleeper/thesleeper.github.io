@@ -5,6 +5,8 @@ let playerElements = {};
 let coins = {};
 let coinElements = {};
 
+let serverBuild = true;
+
 const gameContainer = document.querySelector(".game-container");
 const playerNameInput = document.querySelector("#player-name");
 const playerColorButton = document.querySelector("#player-color");
@@ -79,7 +81,6 @@ function createName() {
 }
 
 function isSolid(x, y) {
-
   const blockedNextSpace = mapData.blockedSpaces[getKeyString(x, y)];
   return (
     blockedNextSpace ||
@@ -168,6 +169,7 @@ function OnplayerStateChanged(user) {
   }
 }
 
+
 function AddControlListeners() {
   new KeyPressListener("ArrowUp", () => handleArrowPress(0, -1))
   new KeyPressListener("ArrowDown", () => handleArrowPress(0, 1))
@@ -178,6 +180,20 @@ function AddControlListeners() {
   downButton.addEventListener("click", () => { handleArrowPress(0, 1); })
   leftButton.addEventListener("click", () => { handleArrowPress(-1, 0); })
   rightButton.addEventListener("click", () => { handleArrowPress(1, 0); })
+
+  if (serverBuild) {
+    new KeyPressListener("KeyQ", () => { UpdateServerState("start"); });
+    new KeyPressListener("KeyW", () => { UpdateServerState("mid"); });
+    new KeyPressListener("KeyE", () => { UpdateServerState("end"); });
+  }
+}
+
+function UpdateServerState(stateToChange) {
+  // console.log("ServerAction");
+  const serverState = firebase.database().ref(`server`);
+  serverState.set({
+    state: stateToChange
+  })
 }
 
 
@@ -187,6 +203,7 @@ function InitGame() {
 
   const allPlayersRef = firebase.database().ref(`players`);
   const allCoinsRef = firebase.database().ref(`coins`);
+  const serverState = firebase.database().ref(`server`);
 
   allPlayersRef.on("value", (snapshot) => {
     //Fires whenever a change occurs
@@ -281,6 +298,18 @@ function InitGame() {
   })
 
 
+  serverState.on("value", (snapshot) => {
+    console.log(snapshot.val());
+    document.querySelector("#server-status").innerText = snapshot.val().state;
+  });
+
+  serverState.on("child_changed", (snapshot) => {
+    // console.log(snapshot.val().serverState);
+  });
+
+
+
+
   //Updates player name with text input
   playerNameInput.addEventListener("change", (e) => {
     const newName = e.target.value || createName();
@@ -305,6 +334,7 @@ function InitGame() {
 
 }
 
+//firebase
 function placeCoin() {
   const { x, y } = getRandomSafeSpot();
   const coinRef = firebase.database().ref(`coins/${getKeyString(x, y)}`);
@@ -319,8 +349,7 @@ function placeCoin() {
   }, randomFromArray(coinTimeouts));
 }
 
-
-
+//firebase
 function attemptGrabCoin(x, y) {
   const key = getKeyString(x, y);
   if (coins[key]) {
@@ -332,7 +361,7 @@ function attemptGrabCoin(x, y) {
   }
 }
 
-//move player
+//firebase, move player
 function handleArrowPress(xChange = 0, yChange = 0) {
   const newX = players[playerId].x + xChange;
   const newY = players[playerId].y + yChange;
