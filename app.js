@@ -299,30 +299,8 @@ function InitGame() {
 
 
   serverState.on("value", (snapshot) => {
-    console.log(snapshot.val());
-    var state = snapshot.val().state;
-    document.querySelector("#server-status").innerText = state;
-
-    switch (state) {
-      case "start":
-        document.querySelector('.game-container').style.backgroundColor = "#ff0000";
-        break;
-      case "mid":
-        document.querySelector('.game-container').style.backgroundColor = "#00ff00";
-        break;
-      case "end":
-        document.querySelector('.game-container').style.backgroundColor = "#0000ff";
-        break;
-
-    }
+    HandleServerState(snapshot.val().state);
   });
-
-  serverState.on("child_changed", (snapshot) => {
-    // console.log(snapshot.val().serverState);
-  });
-
-
-
 
   //Updates player name with text input
   playerNameInput.addEventListener("change", (e) => {
@@ -346,6 +324,23 @@ function InitGame() {
   //Place my first coin
   placeCoin();
 
+}
+
+function HandleServerState(state) {
+  document.querySelector("#server-status").innerText = state;
+
+  switch (state) {
+    case "start":
+      document.querySelector('.game-container').style.backgroundColor = "#ff0000";
+      break;
+    case "mid":
+      document.querySelector('.game-container').style.backgroundColor = "#00ff00";
+      break;
+    case "end":
+      document.querySelector('.game-container').style.backgroundColor = "#0000ff";
+      break;
+
+  }
 }
 
 //firebase
