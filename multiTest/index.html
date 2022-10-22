@@ -1,7 +1,55 @@
 <html>
 
+<head>
+  <title>Multiplayer Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" type="text/css">
+</head>
+
 <body>
-    hello world
+
+  <div class="game-container">
+  </div>
+  <div class="player-info">
+    <div>
+      <label for="player-name">Your Name</label>
+      <input id="player-name" maxlength="10" type="text" />
+    </div>
+    <div id="server-status">
+      --Server Status--
+    </div>
+    <div>
+      <button id="player-color">Change Color</button>
+      <button id="up-button">U</button>
+      <button id="down-button">D</button>
+      <button id="left-button">L</button>
+      <button id="right-button">R</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDJ3HcRtMdNyW1NBMPEznEpGjw3yCQ33zI",
+      authDomain: "rs-react-projects.firebaseapp.com",
+      projectId: "rs-react-projects",
+      storageBucket: "rs-react-projects.appspot.com",
+      messagingSenderId: "862797701194",
+      appId: "1:862797701194:web:a58894b7957c170b0f06b3",
+      measurementId: "G-S09ZLKY9MJ",
+      databaseURL: "https://rs-react-projects-default-rtdb.asia-southeast1.firebasedatabase.app",
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+
+  <script src="/KeyPressListener.js"></script>
+  <script src="/app.js"></script>
 </body>
 
 </html>
